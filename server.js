@@ -238,7 +238,7 @@ app.post("/upload", (req, res) => {
 });
 
 const generateToken = () => {
-  return jwt.sign({ auth: true }, process.env.JWT_SECRET_KEY, {
+  return jwt.sign({ auth: true }, process.env.JWT_SERCET_KEY, {
     expiresIn: "1d",
   });
 };
