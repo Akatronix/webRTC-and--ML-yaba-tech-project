@@ -28,6 +28,10 @@ app.post("/login", (req, res) => {
   if (!email && !password)
     return res.status(400).send({ message: "Wrong Crendetials" });
 
+
+  console.log(process.env.USER_EMAIL);
+  console.log(process.env.USER_PASSWORD);
+  
   if (
     email !== process.env.USER_EMAIL ||
     password !== process.env.USER_PASSWORD
