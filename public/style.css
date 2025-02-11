@@ -101,6 +101,9 @@ button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
+img{
+   width: 50px;
+}
 
 /* Small screens (mobile) */
 @media (max-width: 768px) {
