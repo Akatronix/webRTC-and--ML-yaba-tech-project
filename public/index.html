@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebRTC Video Chat</title>
+    <link rel="icon" href="./logo.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="header">
+      <h1>Raspberry pi Camera</h1>
+      <div>
+        <button onclick="goToUpload()">Upload</button>
+        <button class="logout" onclick="logout()">logout</button>
+      </div>
+    </div>
+
+    <div class="home">
+      <div class="video-container">
+        <video id="myVideo" autoplay playsinline muted></video>
+        <video id="remoteVideo" autoplay playsinline></video>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-peer/9.11.1/simplepeer.min.js"></script>
+    <script defer src="face-api.min.js"></script>
+    <script defer src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="../logo.ico" type="image/x-icon" />
+    <title>upload image</title>
+    <link rel="stylesheet" href="upload.css" />
+  </head>
+  <body class="lato-regular">
+    <h1>upload Image</h1>
+    <div class="info_wrapper">
+      <p class="info">
+        please upload only two images and make sure you entered meaningful name
+        because it will be use to detect the image
+      </p>
+    </div>
+    <div class="home-link">
+      <p onclick="goToHome()">Go to Home</p>
+    </div>
+    <div class="img_cover">
+      <img src="./upload.png" alt="" />
+    </div>
+
+    <form id="uploadForm">
+      <div>
+        <div>
+          <label for="name">Image Name</label><br />
+          <input type="text" id="name" />
+        </div>
+        <div class="cet">
+          <label class="select" for="upload">Select Image</label>
+          <input type="file" id="upload" multiple />
+        </div>
+
+        <button class="button" type="submit">Upload</button>
+      </div>
+    </form>
+
+    <script defer src="./upload.js"></script>
+  </body>
+</html>

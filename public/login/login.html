@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="icon" href="../logo.ico" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="login.css" />
+  </head>
+  <body class="lato-regular">
+    <div id="loading" class="loading-screen">
+      <img src="loader.gif" alt="Loading..." class="loading-image" />
+      <p class="loading-text">Loading...</p>
+    </div>
+
+    <div
+      id="loginPage"
+      class="flex items-center justify-between w-full h-screen bg-white relative"
+    >
+      <!-- Left Section -->
+      <div class="left-section">
+        <div>
+          <p class="welcome-message">Welcome Back</p>
+          <p class="sub-message">Please Login to continue</p>
+          <p class="contact-message">
+            Don't have an account? Please contact the admin.
+          </p>
+          <div class="img_cover">
+            <img src="login.png" alt="login images" class="login-image" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Section (Login Form) -->
+      <div class="right-section">
+        <div class="login-container">
+          <div class="company-info">
+            <img src="logo.jpg" alt="company logo" class="company-logo" />
+            <p class="company-name">Yaba college of technology</p>
+          </div>
+          <p class="login-title">Login</p>
+          <form id="loginForm">
+            <div>
+              <label for="email" class="label-text">Email:</label>
+              <input type="email" id="email" class="input-field" required />
+            </div>
+
+            <div>
+              <label for="password" class="label-text">Password:</label>
+              <input
+                type="password"
+                id="password"
+                class="input-field"
+                required
+              />
+            </div>
+
+            <p id="error-message" class="error-message"></p>
+
+            <button
+              type="submit"
+              id="loginButton"
+              class="login-button"
+              disabled
+            >
+              Login
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+    <script src="login.js"></script>
+  </body>
+</html>
