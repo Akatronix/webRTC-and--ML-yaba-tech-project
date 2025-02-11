@@ -19,6 +19,12 @@ span {
   margin-bottom: 10px;
   font-size: 35px;
 }
+.cont {
+  display: flex; 
+  align-items: center; 
+  justify-content: center;  
+  gap: 10px;
+}
 
 body {
   background-color: #121212;
