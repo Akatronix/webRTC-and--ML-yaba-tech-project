@@ -51,7 +51,7 @@ document
       formData.append("images", files[i]);
     }
 
-    fetch("http://localhost:5000/upload", {
+    fetch("https://yctcamspy.up.railway.app/upload", {
       method: "POST",
       body: formData,
     })
