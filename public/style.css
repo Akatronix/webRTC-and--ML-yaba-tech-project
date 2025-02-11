@@ -14,9 +14,10 @@
   border-bottom: 1px solid gray;
 }
 
-h1 {
+span {
   padding: 10px 0;
   margin-bottom: 10px;
+  font-size: 35px;
 }
 
 body {
