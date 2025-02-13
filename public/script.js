@@ -29,6 +29,14 @@ Promise.all([
   startVideo();
 });
 
+
+// Detect if another user disconnects
+socket.on("userDisconnected", (userId) => {
+    noVideo.style.display = "block";
+  loadInfo.innerText = "Camera Disconnected, still want to continue refresh the page to connect";
+  
+});
+
 function base64UrlDecode(base64Url) {
   let base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
   base64 = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), "=");
