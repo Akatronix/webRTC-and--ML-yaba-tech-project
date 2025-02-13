@@ -58,7 +58,15 @@ body {
   object-fit: cover;
   border-radius: 10px;
   z-index:20px;
-  background:red;
+  background:#14161c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.img-noVideo{
+  width:60px;
+  height:60px;
+  margin:10px 0;
 }
 
 #remoteVideo {
