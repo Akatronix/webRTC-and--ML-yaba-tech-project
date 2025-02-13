@@ -270,6 +270,8 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
     users = users.filter((user) => user !== socket.id);
+
+      io.emit("userDisconnected", socket.id);
   });
 });
 
