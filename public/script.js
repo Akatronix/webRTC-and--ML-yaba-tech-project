@@ -4,6 +4,7 @@ let myStream;
 let peer;
 const myVideo = document.getElementById("myVideo");
 const remoteVideo = document.getElementById("remoteVideo");
+const noVideo = document.getElementById("noVideo");
 let mediaRecorder;
 let recordedChunks = [];
 let labels = [];
@@ -173,8 +174,9 @@ async function getLabeledFaceDescriptions() {
 }
 
 remoteVideo.onplay = async () => {
-  console.log("Remote video started playing, initializing face recognition.");
 
+  console.log("Remote video started playing, initializing face recognition.");
+  noVideo.style.display = "none";
   const labeledFaceDescriptors = await getLabeledFaceDescriptions();
   const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors);
 
