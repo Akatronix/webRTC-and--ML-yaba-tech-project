@@ -1,11 +1,7 @@
 const socket = io.connect(window.location.origin);
 
 
-// Detect if another user disconnects
-socket.on("userDisconnected", (userId) => {
-  console.log(`User ${userId} has disconnected.`);
-  
-});
+
 
 let myStream;
 let peer;
@@ -32,8 +28,8 @@ Promise.all([
 
 // Detect if another user disconnects
 socket.on("userDisconnected", (userId) => {
-    noVideo.style.display = "block";
-  loadInfo.innerText = "Camera Disconnected, still want to continue refresh the page to connect";
+    noVideo.style.display = "flex";
+    loadInfo.innerText = "Camera Disconnected, still want to continue refresh the page to connect";
   
 });
 
