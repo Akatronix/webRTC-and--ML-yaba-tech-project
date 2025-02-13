@@ -5,6 +5,7 @@ let peer;
 const myVideo = document.getElementById("myVideo");
 const remoteVideo = document.getElementById("remoteVideo");
 const noVideo = document.getElementById("noVideo");
+const loadInfo = document.getElementById("loadInfo");
 let mediaRecorder;
 let recordedChunks = [];
 let labels = [];
