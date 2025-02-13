@@ -1,5 +1,12 @@
 const socket = io.connect(window.location.origin);
 
+
+// Detect if another user disconnects
+socket.on("userDisconnected", (userId) => {
+  console.log(`User ${userId} has disconnected.`);
+  
+});
+
 let myStream;
 let peer;
 const myVideo = document.getElementById("myVideo");
