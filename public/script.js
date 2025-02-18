@@ -237,9 +237,6 @@
 
 
 
-
-
-
 const socket = io.connect(window.location.origin);
 
 let myStream;
@@ -250,50 +247,81 @@ const noVideo = document.getElementById("noVideo");
 const loadInfo = document.getElementById("loadInfo");
 let labels = [];
 
-// Detect if running on Linux
-function isLinux() {
-  return navigator.userAgent.toLowerCase().includes("linux");
+// Force CPU Backend (Fix WebGL Errors)
+async function forceCpuBackend() {
+  console.log("Forcing TensorFlow.js to use CPU...");
+  await tf.setBackend("cpu");
+  console.log("TensorFlow.js is now using CPU backend.");
 }
 
-// Load models with CPU fallback for Linux
+// Load models with CPU fallback
 async function loadModels() {
-  if (isLinux()) {
-    console.log("Linux detected: Forcing CPU backend.");
-    await tf.setBackend("cpu");
-  }
+  await forceCpuBackend(); // Ensure CPU backend is set before loading models
   await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
   await faceapi.nets.ssdMobilenetv1.loadFromUri("/models");
   await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
   await faceapi.nets.faceRecognitionNet.loadFromUri("/models");
   await faceapi.nets.faceExpressionNet.loadFromUri("/models");
+  console.log("Models loaded successfully.");
 }
 
-Promise.all([loadModels(), fetchFolders()]).then(() => {
-  startVideo();
-});
+// Check if user is authenticated
+function checkTokenGoToHome() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    window.location.href = "/login";
+    return;
+  }
+  const decodedUser = decodeJwt(token);
+  if (!decodedUser || !decodedUser.payload.auth) {
+    window.location.href = "/login";
+  }
+}
 
-// Detect if another user disconnects
-socket.on("userDisconnected", () => {
-  noVideo.style.display = "flex";
-  loadInfo.innerText =
-    "Camera Disconnected, still want to continue? Refresh the page to reconnect.";
-});
+// Function to decode a JWT token
+function decodeJwt(token) {
+  try {
+    const [header, payload] = token.split(".").map(base64UrlDecode);
+    return { header: JSON.parse(header), payload: JSON.parse(payload) };
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
+  }
+}
 
-// Fetch stored labels for face recognition
+// Base64 decoder
+function base64UrlDecode(base64Url) {
+  let base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  base64 = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), "=");
+  return atob(base64);
+}
+
+// Fetch folder labels
 async function fetchFolders() {
   try {
     const response = await fetch("./folders.json");
     if (!response.ok) throw new Error("Failed to load folders.json");
-    labels = await response.json();
-    console.log("Labels:", labels);
-    return labels;
+
+    const data = await response.json();
+    console.log("Folders:", data);
+    return data;
   } catch (error) {
-    console.error("Error fetching labels:", error);
+    console.error("Error fetching data:", error);
     return [];
   }
 }
 
-// Start video streaming
+// Logout function
+function logout() {
+  localStorage.removeItem("token");
+  window.location.href = "/login";
+}
+
+function goToUpload() {
+  window.location.href = "/upload";
+}
+
+// Start Video Streaming
 function startVideo() {
   navigator.mediaDevices
     .getUserMedia({ video: true, audio: true })
@@ -303,19 +331,45 @@ function startVideo() {
       myVideo.muted = true;
       socket.emit("joinRoom");
 
-      // When another user connects
       socket.on("userConnected", (otherUserId) => {
         console.log("New user connected:", otherUserId);
-        createPeerConnection(true, otherUserId);
+        peer = new SimplePeer({
+          initiator: true,
+          trickle: false,
+          stream: myStream,
+        });
+
+        peer.on("signal", (data) => {
+          socket.emit("sendOffer", { target: otherUserId, signalData: data });
+        });
+
+        peer.on("stream", (userStream) => {
+          remoteVideo.srcObject = userStream;
+        });
+
+        peer.on("error", (err) => console.error("Peer Error:", err));
       });
 
-      // When an offer is received from another user
       socket.on("offerReceived", ({ from, signal }) => {
         console.log("Offer received from:", from);
-        createPeerConnection(false, from, signal);
+        peer = new SimplePeer({
+          initiator: false,
+          trickle: false,
+          stream: myStream,
+        });
+
+        peer.on("signal", (data) => {
+          socket.emit("sendAnswer", { target: from, signalData: data });
+        });
+
+        peer.on("stream", (userStream) => {
+          remoteVideo.srcObject = userStream;
+        });
+
+        peer.on("error", (err) => console.error("Peer Error:", err));
+        peer.signal(signal);
       });
 
-      // When an answer is received
       socket.on("answerReceived", (signal) => {
         console.log("Answer received, completing connection");
         peer.signal(signal);
@@ -326,37 +380,7 @@ function startVideo() {
     });
 }
 
-// Create WebRTC peer connection
-function createPeerConnection(isInitiator, otherUserId, receivedSignal = null) {
-  peer = new SimplePeer({
-    initiator: isInitiator,
-    trickle: false,
-    stream: myStream,
-    config: {
-      iceServers: [{ urls: "stun:stun.l.google.com:19302" }], // STUN for NAT traversal
-    },
-  });
-
-  peer.on("signal", (data) => {
-    if (isInitiator) {
-      socket.emit("sendOffer", { target: otherUserId, signalData: data });
-    } else {
-      socket.emit("sendAnswer", { target: otherUserId, signalData: data });
-    }
-  });
-
-  peer.on("stream", (userStream) => {
-    remoteVideo.srcObject = userStream;
-  });
-
-  peer.on("error", (err) => console.error("Peer Error:", err));
-
-  if (receivedSignal) {
-    peer.signal(receivedSignal);
-  }
-}
-
-// Face recognition logic
+// Load Labeled Face Descriptions
 async function getLabeledFaceDescriptions() {
   if (!labels || labels.length === 0) {
     console.error("No labels available for face recognition.");
@@ -389,10 +413,11 @@ async function getLabeledFaceDescriptions() {
   );
 }
 
-// Face recognition on remote video stream
+// Face Recognition on Remote Video
 remoteVideo.onplay = async () => {
   console.log("Remote video started playing, initializing face recognition.");
   noVideo.style.display = "none";
+
   const labeledFaceDescriptors = await getLabeledFaceDescriptions();
   const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors);
 
@@ -437,3 +462,8 @@ remoteVideo.onplay = async () => {
     });
   }, 100);
 };
+
+// Initialize
+Promise.all([loadModels(), fetchFolders()]).then(() => {
+  startVideo();
+});
