@@ -69,7 +69,7 @@ const muterFN = () => {
 
     isMuted = !isMuted;
     remoteVideo.srcObject.getAudioTracks().forEach(track => track.enabled = !isMuted);
-    muteButton.innerHTML = isMuted ? "<strong>Unmute</strong>" : "<strong>Mute</strong>";
+    muteButton.innerHTML = isMuted ? "Unmute" : "Mute";
 
 };
 
