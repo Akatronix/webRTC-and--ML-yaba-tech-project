@@ -59,6 +59,19 @@ function checkTokenGoToHome() {
   }
 }
 
+const muteButton = document.getElementById("muter");
+let isMuted = false;
+
+muteButton.addEventListener("click", () => {
+        if (!remoteVideo) return;
+
+        isMuted = !isMuted;
+        remoteVideo.getAudioTracks().forEach(track => track.enabled = !isMuted);
+        muteButton.textContent = isMuted ? "Unmute" : "Mute";
+      });
+
+
+
 async function fetchFolders() {
   try {
     const response = await fetch("./folders.json");
