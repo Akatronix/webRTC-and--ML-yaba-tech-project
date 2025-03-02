@@ -64,13 +64,13 @@ function checkTokenGoToHome() {
 
 const muterFN = () => {
   console.log("clicked");
-  const muteButton = document.getElementById("muter");
+  let textInfo = document.getElementById("muter");
     if (!remoteVideo || !remoteVideo.srcObject) return;
   
 
     isMuted = !isMuted;
     remoteVideo.srcObject.getAudioTracks().forEach(track => track.enabled = !isMuted);
-    muteButton.innerHTML = isMuted ? "Unmute" : "Mute";
+    textInfo.innerHTML = isMuted ? "Unmute" : "Mute";
 
 };
 
