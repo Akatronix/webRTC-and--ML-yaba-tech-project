@@ -62,17 +62,41 @@ function checkTokenGoToHome() {
 
 
 
-const muterFN = () => {
-  console.log("clicked");
-  let textInfo = document.getElementById("muter");
-    if (!remoteVideo || !remoteVideo.srcObject) return;
+// const muterFN = () => {
+//   console.log("clicked");
+//   let textInfo = document.getElementById("muter");
+//     if (!remoteVideo || !remoteVideo.srcObject) return;
   
 
-    isMuted = !isMuted;
-    remoteVideo.srcObject.getAudioTracks().forEach(track => track.enabled = !isMuted);
-    textInfo.innerText = isMuted ? "Unmute" : "Mute";
+//     isMuted = !isMuted;
+//     remoteVideo.srcObject.getAudioTracks().forEach(track => track.enabled = !isMuted);
+//     textInfo.innerText = isMuted ? "Unmute" : "Mute";
 
+// };
+
+
+const muterFN = () => {
+    console.log("clicked");
+
+    let textInfo = document.getElementById("muter");
+    if (!remoteVideo || !remoteVideo.srcObject) {
+        console.warn("No remote video stream available.");
+        return;
+    }
+
+    isMuted = !isMuted;
+
+    remoteVideo.srcObject.getAudioTracks().forEach(track => {
+        track.enabled = !isMuted;
+    });
+
+    if (textInfo) {
+        textInfo.innerText = isMuted ? "Unmute" : "Mute";
+    } else {
+        console.warn("Mute button element not found.");
+    }
 };
+
 
 
 
