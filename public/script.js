@@ -9,7 +9,6 @@ const myVideo = document.getElementById("myVideo");
 const remoteVideo = document.getElementById("remoteVideo");
 const noVideo = document.getElementById("noVideo");
 const loadInfo = document.getElementById("loadInfo");
-const muteButton = document.getElementById("muter");
 let mediaRecorder;
 let recordedChunks = [];
 let labels = [];
@@ -65,7 +64,9 @@ function checkTokenGoToHome() {
 
 const muterFN = () => {
   console.log("clicked");
+  const muteButton = document.getElementById("muter");
     if (!remoteVideo || !remoteVideo.srcObject) return;
+  
 
     isMuted = !isMuted;
     remoteVideo.srcObject.getAudioTracks().forEach(track => track.enabled = !isMuted);
