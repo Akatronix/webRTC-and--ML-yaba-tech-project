@@ -9,9 +9,11 @@ const myVideo = document.getElementById("myVideo");
 const remoteVideo = document.getElementById("remoteVideo");
 const noVideo = document.getElementById("noVideo");
 const loadInfo = document.getElementById("loadInfo");
+const muteButton = document.getElementById("muter");
 let mediaRecorder;
 let recordedChunks = [];
 let labels = [];
+let isMuted = false;
 
 // Load models
 Promise.all([
@@ -59,16 +61,15 @@ function checkTokenGoToHome() {
   }
 }
 
-const muteButton = document.getElementById("muter");
-let isMuted = false;
 
-muteButton.addEventListener("click", () => {
+
+const muterFN = () => {
     if (!remoteVideo || !remoteVideo.srcObject) return;
 
     isMuted = !isMuted;
     remoteVideo.srcObject.getAudioTracks().forEach(track => track.enabled = !isMuted);
     muteButton.textContent = isMuted ? "Unmute" : "Mute";
-});
+};
 
 
 
