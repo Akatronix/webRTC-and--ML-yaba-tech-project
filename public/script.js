@@ -64,6 +64,7 @@ function checkTokenGoToHome() {
 
 
 const muterFN = () => {
+  console.log("clicked");
     if (!remoteVideo || !remoteVideo.srcObject) return;
 
     isMuted = !isMuted;
