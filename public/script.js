@@ -63,12 +63,13 @@ const muteButton = document.getElementById("muter");
 let isMuted = false;
 
 muteButton.addEventListener("click", () => {
-        if (!remoteVideo) return;
+    if (!remoteVideo || !remoteVideo.srcObject) return;
 
-        isMuted = !isMuted;
-        remoteVideo.getAudioTracks().forEach(track => track.enabled = !isMuted);
-        muteButton.textContent = isMuted ? "Unmute" : "Mute";
-      });
+    isMuted = !isMuted;
+    remoteVideo.srcObject.getAudioTracks().forEach(track => track.enabled = !isMuted);
+    muteButton.textContent = isMuted ? "Unmute" : "Mute";
+});
+
 
 
 
